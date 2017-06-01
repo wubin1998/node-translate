@@ -28,13 +28,17 @@ new Promise(function(resolve, reject){
   data = JSON.parse(data)
 
   process.stdout.write(`
-   - ${data.translation[0].green} \n
-   1. ${data.web[0].key.yellow} \n
-    ${data.web[0].value} \n
-   2. ${data.web[1].key.yellow} \n
-    ${data.web[1].value} \n
-   3. ${data.web[2].key.yellow} \n
-    ${data.web[2].value} \n`)
+   - ${data.translation[0].green || ""} \n`)
+
+  if (data.web) {
+    process.stdout.write(`
+    1. ${data.web && data.web[0].key.yellow || ""} \n
+      ${data.web && data.web[0].value || ""} \n
+    2. ${data.web && data.web[1].key.yellow || ""} \n
+      ${data.web && data.web[1].value || ""} \n
+    3. ${data.web && data.web[2].key.yellow || ""} \n
+      ${data.web && data.web[2].value || ""} \n`)
+  }
 })
 .catch(function(e){
   console.log(e);
