@@ -1,0 +1,22 @@
+{
+  "name": "node-translate",
+  "version": "1.0.0",
+  "description": "node-translate",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itellyouu/node-translate.git"
+  },
+  "bin": {
+    "tran": "./lib/index"
+  },
+  "author": "Wu Bin <827433149@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itellyouu/node-translate/issues"
+  },
+  "homepage": "https://github.com/itellyouu/node-translate#readme",
+  "dependencies": {
+    "colors": "^1.1.2"
+  }
+}

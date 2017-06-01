@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+var http = require('http');
+var colors = require('colors');
+var url = 'http://fanyi.youdao.com/openapi.do?keyfrom=bladetrans&key=902909552&type=data&doctype=json&version=1.1&q=';
+
+var params = '';
+for (var i = 2; i < process.argv.length; i++ ){
+  params += process.argv[i] + " "
+}
+
+new Promise(function(resolve, reject){
+  var data = ""
+  http.get(url + params, function(res){
+    res.on('data', function(result){
+      data += result;
+    })
+    res.on('end', function(){
+      resolve(data)
+    })
+  }).on('error', function(e){
+    reject(e)
+  })
+})
+.then(function(data){
+  data = JSON.parse(data)
+
+  process.stdout.write(`
+   - ${data.translation[0].green} \n
+   1. ${data.web[0].key.yellow} \n
+    ${data.web[0].value} \n
+   2. ${data.web[1].key.yellow} \n
+    ${data.web[1].value} \n
+   3. ${data.web[2].key.yellow} \n
+    ${data.web[2].value} \n`)
+})
+.catch(function(e){
+  console.log(e);
+})
