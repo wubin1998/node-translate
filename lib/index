@@ -2,12 +2,14 @@
 
 var http = require('http');
 var colors = require('colors');
+var querystring = require('querystring');
 var url = 'http://fanyi.youdao.com/openapi.do?keyfrom=bladetrans&key=902909552&type=data&doctype=json&version=1.1&q=';
 
 var params = '';
 for (var i = 2; i < process.argv.length; i++ ){
   params += process.argv[i] + " "
 }
+params = querystring.escape(params)
 
 new Promise(function(resolve, reject){
   var data = ""
