@@ -24,59 +24,18 @@ new Promise(function (resolve, reject) {
 })
 .then(function (data) {
   data = JSON.parse(data)
-  /*
-    Console.prototype.log = function() {
-      this._stdout.write(util.format.apply(this, arguments) + '\n');
-    };
-  */
-  // console.log(`
-  //   - ${data.translation[0].green || ""}
-  // `)
+
   process.stdout.write(`
-    - ${data.translation[0].green || ""} \n
-  `)
+    - ${data.translation[0].green || ""} \n`)
 
-  /*
-    {
-      "translation": ["嗨"],
-      "basic": { 
-        "us-phonetic": "haɪ", 
-        "phonetic": "haɪ", 
-        "uk-phonetic": "haɪ", 
-        "explains": ["int. 嗨！（表示问候或用以唤起注意）", "n. (Hi)人名；(柬)希"] 
-      }, 
-      "query": "hi", 
-      "errorCode": 0, 
-      "web": [
-        { 
-          "value": ["打招呼", "血凝抑制试验(Hemagglutinin Inbitation)", "血凝抑制(Hemagglutination Inbition)"], 
-          "key": "hi" 
-        }, 
-        { 
-          "value": ["海拉克斯"], 
-          "key": "Hi Lux" 
-        }, 
-        { 
-          "value": ["增强接受设定", "高阻抗", "加强接管设定"], 
-          "key": "HI GAIN" 
-        }
-      ]
-    }
-  */
 
-  if (!data.web || (Array.isArray(data.web) && data.web.length == 0)) {
-    console.log('nothing get')
-    return
-  }
+  if (!data.web || (Array.isArray(data.web) && data.web.length == 0)) return
   let print = ``
-  let i = 1
-  data.web.forEach(item => {
+  data.web.forEach( (item, index) => {
     print += `
-    ${i++}. ${item.key ? item.key.yellow : ''} \n
-    ${item.value ? item.value.join(',') : ''} \n
-    `
+    ${++index}. ${item.key ? item.key.yellow : ''} \n
+      ${item.value ? item.value.join(',') : ''} \n\n`
   })
-  // console.log(print)
   process.stdout.write(print)
   
 })
