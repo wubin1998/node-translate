@@ -1,45 +1,83 @@
 #!/usr/bin/env node
 
-var http = require('http');
-var colors = require('colors');
-var querystring = require('querystring');
-var url = 'http://fanyi.youdao.com/openapi.do?keyfrom=bladetrans&key=902909552&type=data&doctype=json&version=1.1&q=';
+const http = require('http');
+const colors = require('colors');
+const querystring = require('querystring');
+const fs = require('fs');
+const url = 'http://fanyi.youdao.com/openapi.do?keyfrom=bladetrans&key=902909552&type=data&doctype=json&version=1.1&q=';
 
-var params = '';
-for (var i = 2; i < process.argv.length; i++ ){
-  params += process.argv[i] + " "
-}
+let params = process.argv.slice(2).join(' ')
 params = querystring.escape(params)
 
-new Promise(function(resolve, reject){
-  var data = ""
-  http.get(url + params, function(res){
-    res.on('data', function(result){
+new Promise(function (resolve, reject) {
+  let data = ""
+  http.get(url + params, function (res) {
+    res.on('data', function (result) {
       data += result;
     })
-    res.on('end', function(){
+    res.on('end', function () {
       resolve(data)
     })
-  }).on('error', function(e){
+  }).on('error', function (e) {
     reject(e)
   })
 })
-.then(function(data){
+.then(function (data) {
   data = JSON.parse(data)
-
+  /*
+    Console.prototype.log = function() {
+      this._stdout.write(util.format.apply(this, arguments) + '\n');
+    };
+  */
+  // console.log(`
+  //   - ${data.translation[0].green || ""}
+  // `)
   process.stdout.write(`
-   - ${data.translation[0].green || ""} \n`)
+    - ${data.translation[0].green || ""} \n
+  `)
 
-  if (data.web) {
-    process.stdout.write(`
-    1. ${data.web && data.web[0].key.yellow || ""} \n
-      ${data.web && data.web[0].value || ""} \n
-    2. ${data.web && data.web[1].key.yellow || ""} \n
-      ${data.web && data.web[1].value || ""} \n
-    3. ${data.web && data.web[2].key.yellow || ""} \n
-      ${data.web && data.web[2].value || ""} \n`)
+  /*
+    {
+      "translation": ["嗨"],
+      "basic": { 
+        "us-phonetic": "haɪ", 
+        "phonetic": "haɪ", 
+        "uk-phonetic": "haɪ", 
+        "explains": ["int. 嗨！（表示问候或用以唤起注意）", "n. (Hi)人名；(柬)希"] 
+      }, 
+      "query": "hi", 
+      "errorCode": 0, 
+      "web": [
+        { 
+          "value": ["打招呼", "血凝抑制试验(Hemagglutinin Inbitation)", "血凝抑制(Hemagglutination Inbition)"], 
+          "key": "hi" 
+        }, 
+        { 
+          "value": ["海拉克斯"], 
+          "key": "Hi Lux" 
+        }, 
+        { 
+          "value": ["增强接受设定", "高阻抗", "加强接管设定"], 
+          "key": "HI GAIN" 
+        }
+      ]
+    }
+  */
+
+  if (!data.web || (Array.isArray(data.web) && data.web.length == 0)) {
+    console.log('nothing get')
+    return
   }
+  let print = ``
+  let i = 1
+  data.web.forEach(item => {
+    print += `
+    ${i++}. ${item.key ? item.key.yellow : ''} \n
+    ${item.value ? item.value.join(',') : ''} \n
+    `
+  })
+  // console.log(print)
+  process.stdout.write(print)
+  
 })
-.catch(function(e){
-  console.log(e);
-})
+.catch(console.log)
