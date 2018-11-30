@@ -2,7 +2,7 @@
 
 # install
 ```bash
-git clone https://github.com/itellyouu/node-translate
+git clone https://github.com/wubin1998/node-translate
 
 cd node-translate
 
